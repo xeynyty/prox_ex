@@ -33,6 +33,234 @@ defmodule ProxEx.Api do
           type: String.t()
         }
 
+  @type proxdisk() :: %{
+          by_id_link: String,
+          devpath: String,
+          gpt: Integer,
+          health: String,
+          model: String,
+          osdid: Integer,
+          "osdid-list": String,
+          rpm: Integer,
+          serial: String,
+          size: Integer,
+          type: String,
+          used: String,
+          vendor: String,
+          wearout: Integer,
+          wwn: String
+        }
+
+  @type proxvm() :: %{
+      cpu: non_neg_integer(),
+      cpus: non_neg_integer(),
+      disk: non_neg_integer(),
+      diskread: non_neg_integer(),
+      diskwrite: non_neg_integer(),
+      maxdisk: non_neg_integer(),
+      maxmem: non_neg_integer(),
+      mem: non_neg_integer(),
+      name: String.t(),
+      netin: non_neg_integer(),
+      netout: non_neg_integer(),
+      status: String.t(),
+      uptime: non_neg_integer(),
+      vmid: non_neg_integer()
+  }
+
+  @type proxvm_info() :: %{
+      vmgenid: String.t(),
+      scsi0: String.t(),
+      meta: String.t(),
+      memory: String.t(),
+      agent: String.t(),
+      description: String.t(),
+      scsihw: String.t(),
+      boot: String.t(),
+      ide2: String.t(),
+      onboot: integer(),
+      name: String.t(),
+      digest: String.t(),
+      sockets: integer(),
+      net0: String.t(),
+      smbios1: String.t(),
+      ostype: String.t(),
+      balloon: integer(),
+      cores: integer(),
+      numa: integer()
+  }
+
+  @type proxvm_status_alive() :: %{
+    agent: 1,
+      blockstat: %{
+        ide2: %{
+          idle_time_ns: integer(),
+          rd_total_time_ns: integer(),
+          timed_stats: [],
+          wr_total_time_ns: integer(),
+          rd_bytes: integer(),
+          rd_merged: integer(),
+          zone_append_total_time_ns: integer(),
+          failed_wr_operations: integer(),
+          unmap_total_time_ns: integer(),
+          invalid_rd_operations: integer(),
+          wr_bytes: integer(),
+          unmap_operations: integer(),
+          wr_merged: integer(),
+          flush_operations: integer(),
+          failed_flush_operations: integer(),
+          wr_operations: integer(),
+          account_invalid: boolean(),
+          unmap_bytes: integer(),
+          zone_append_operations: integer(),
+          zone_append_merged: integer(),
+          invalid_wr_operations: integer(),
+          zone_append_bytes: integer(),
+          invalid_flush_operations: integer(),
+          failed_zone_append_operations: integer(),
+          flush_total_time_ns: integer(),
+          failed_rd_operations: integer(),
+          unmap_merged: integer(),
+          wr_highest_offset: integer(),
+          invalid_unmap_operations: integer(),
+          invalid_zone_append_operations: integer(),
+          account_failed: boolean(),
+          failed_unmap_operations: integer(),
+          rd_operations: integer()
+        },
+        scsi0: %{
+          idle_time_ns: integer(),
+          rd_total_time_ns: integer(),
+          timed_stats: [],
+          wr_total_time_ns: integer(),
+          rd_bytes: integer(),
+          rd_merged: integer(),
+          zone_append_total_time_ns: integer(),
+          failed_wr_operations: integer(),
+          unmap_total_time_ns: integer(),
+          invalid_rd_operations: integer(),
+          wr_bytes: integer(),
+          unmap_operations: integer(),
+          wr_merged: integer(),
+          flush_operations: integer(),
+          failed_flush_operations: integer(),
+          wr_operations: integer(),
+          account_invalid: boolean(),
+          unmap_bytes: integer(),
+          zone_append_operations: integer(),
+          zone_append_merged: integer(),
+          invalid_wr_operations: integer(),
+          zone_append_bytes: integer(),
+          invalid_flush_operations: integer(),
+          failed_zone_append_operations: integer(),
+          flush_total_time_ns: integer(),
+          failed_rd_operations: integer(),
+          unmap_merged: integer(),
+          wr_highest_offset: integer(),
+          invalid_unmap_operations: integer(),
+          invalid_zone_append_operations: integer(),
+          account_failed: boolean(),
+          failed_unmap_operations: integer(),
+          rd_operations: integer()
+        }
+      },
+      cpu: float(),
+      cpus: integer(),
+      disk: integer(),
+      diskread: integer(),
+      diskwrite: integer(),
+      ha: %{managed: integer()},
+      maxdisk: integer(),
+      maxmem: integer(),
+      mem: integer(),
+      name: String.t(),
+      netin: integer(),
+      netout: integer(),
+      nics: %{optional(String.t()) => %{netin: integer(), netout: integer()}},
+      pid: integer(),
+      proxmox_support: %{
+        "backup-max-workers": boolean(),
+        "pbs-dirty-bitmap": boolean(),
+        "pbs-dirty-bitmap-migration": boolean(),
+        "pbs-dirty-bitmap-savevm": boolean(),
+        "pbs-library-version": String.t(),
+        "pbs-masterkey": boolean(),
+        "query-bitmap-info": boolean()
+      },
+      qmpstatus: String.t(),
+      running_machine: String.t(),
+      running_qemu: String.t(),
+      status: String.t(),
+      uptime: integer(),
+      vmid: integer()
+  }
+
+  @type proxvm_status_stopped() :: %{
+    agent: integer(),
+    cpu: float(),
+    cpus: integer(),
+    disk: integer(),
+    diskread: integer(),
+    diskwrite: integer(),
+    ha: %{managed: integer()},
+    maxdisk: integer(),
+    maxmem: integer(),
+    mem: integer(),
+    name: String.t(),
+    netin: integer(),
+    netout: integer(),
+    qmpstatus: String.t(),
+    status: String.t(),
+    uptime: integer(),
+    vmid: integer()
+  }
+
+  @type proxvm_network_intefraces() :: %{
+    hardware_address: String.t(),
+    ip_addresses: [
+      %{
+        ip_address: String.t(),
+        ip_address_type: String.t(),
+        prefix: integer()
+      }
+    ],
+    name: String.t(),
+    statistics: %{
+      rx_bytes: integer(),
+      rx_dropped: integer(),
+      rx_errs: integer(),
+      rx_packets: integer(),
+      tx_bytes: integer(),
+      tx_dropped: integer(),
+      tx_errs: integer(),
+      tx_packets: integer()
+    }
+  }
+
+  @type proxvm_fs_info() :: %{
+    disk: [
+      %{
+        bus: integer(),
+        bus_type: String.t(),
+        dev: String.t(),
+        pci_controller: %{
+          bus: integer(),
+          domain: integer(),
+          function: integer(),
+          slot: integer()
+        },
+        serial: String.t(),
+        target: integer(),
+        unit: integer()
+      }
+    ],
+    mountpoint: String.t(),
+    name: String.t(),
+    total_bytes: integer(),
+    type: String.t(),
+    used_bytes: integer()
+  }
+
   @doc """
   Get a list of nodes in a cluster
 
@@ -63,26 +291,31 @@ defmodule ProxEx.Api do
     end
   end
 
-  @type proxdisk() :: %{
-          by_id_link: String,
-          devpath: String,
-          gpt: Integer,
-          health: String,
-          model: String,
-          osdid: Integer,
-          "osdid-list": String,
-          rpm: Integer,
-          serial: String,
-          size: Integer,
-          type: String,
-          used: String,
-          vendor: String,
-          wearout: Integer,
-          wwn: String
-        }
-
   @doc """
+  Get a list of disks in a node
 
+  ## Example
+
+      iex> node_disks({"https://127.0.0.1:8006", "*secret token*"}, "node")
+      {:ok, [
+        %{
+          "by_id_link" => "/dev/disk/by-id/scsi-3600508b1001cf85bbf0924e1f842e4e8",
+          "devpath" => "/dev/sdb",
+          "gpt" => 1,
+          "health" => "UNKNOWN",
+          "model" => "LOGICAL_VOLUME",
+          "osdid" => -1,
+          "osdid-list" => nil,
+          "rpm" => -1,
+          "serial" => "600508b1001cf85bbf0924e1f842e4e8",
+          "size" => 8001461248000,
+          "type" => "unknown",
+          "used" => "ext4",
+          "vendor" => "HP      ",
+          "wearout" => "N/A",
+          "wwn" => "0x600508b1001cf85b"
+        }
+      ]}
   """
   @spec node_disks({String.t(), String.t()}, String.t()) :: {:ok, [proxdisk()]} | {:error, term()}
   def node_disks({addr, token}, node) do
@@ -118,6 +351,7 @@ defmodule ProxEx.Api do
         %{...}
       ]}
   """
+  @spec vm_list({String.t(), String.t()}, String.t()) :: {:ok, [proxvm()]} | {:error, term()}
   def vm_list({addr, token}, node) do
     case request_get(addr, token, "nodes/#{node}/qemu") do
       {:ok, %{body: %{"data" => data}}} -> {:ok, data}
@@ -153,7 +387,7 @@ defmodule ProxEx.Api do
         "numa": 1
       }}
   """
-  @spec vm_info({String.t(), String.t()}, String.t(), Integer.t()) :: {:ok, map()} | {:error, term()}
+  @spec vm_info({String.t(), String.t()}, String.t(), integer()) :: {:ok, proxvm_info()} | {:error, term()}
   def vm_info({addr, token}, node, vmid) do
     path = "nodes/#{node}/qemu/#{vmid}/config"
 
@@ -302,6 +536,10 @@ defmodule ProxEx.Api do
       }}
 
   """
+  @spec vm_status({String.t(), String.t()}, String.t(), integer()) ::
+  {:ok, proxvm_status_alive()}
+  | {:ok, proxvm_status_stopped()}
+  | {:error, term()}
   def vm_status({addr, token}, node, vmid) do
     path = "nodes/#{node}/qemu/#{vmid}/status/current"
     case request_get(addr, token, path) do
@@ -311,6 +549,36 @@ defmodule ProxEx.Api do
   end
 
 
+  @doc """
+  Get VM network interfaces
+  ## Example
+
+      iex> vm_network_interfaces({"https://127.0.0.1:8006", "*secret token*"}, "node", 123)
+      {:ok, [
+        %{
+          "hardware-address" => "00:00:00:00:00:00",
+          "ip-addresses" => [
+            %{
+              "ip-address" => "127.0.0.1",
+              "ip-address-type" => "ipv4",
+              "prefix" => 8
+            }
+          ],
+          "name" => "lo",
+          "statistics" => %{
+            "rx-bytes" => 324095518,
+            "rx-dropped" => 0,
+            "rx-errs" => 0,
+            "rx-packets" => 1938412,
+            "tx-bytes" => 324095518,
+            "tx-dropped" => 0,
+            "tx-errs" => 0,
+            "tx-packets" => 1938412
+          }
+        }, %{...}
+      ]}
+  """
+  @spec vm_network_interfaces({String.t(), String.t()}, String.t(), integer()) :: {:ok, [proxvm_network_intefraces()]} | {:error, term()}
   def vm_network_interfaces({addr, token}, node, vmid) do
     path = "nodes/#{node}/qemu/#{vmid}/agent/network-get-interfaces"
     case request_get(addr, token, path) do
@@ -319,6 +587,15 @@ defmodule ProxEx.Api do
     end
   end
 
+
+  @doc """
+  Start a VM
+  ## Example
+
+      iex> vm_start({"https://127.0.0.1:8006", "*secret token*"}, "node", 123)
+      {:ok, "UPID:nodename:001DE27E:083A591A:66E28BF4:qmstart:vmid:username@pve!token_name:"}
+  """
+  @spec vm_start({String.t(), String.t()}, String.t(), integer()) :: {:ok, String.t()} | {:error, term()}
   def vm_start({addr, token}, node, vmid) do
     path = "nodes/#{node}/qemu/#{vmid}/status/start"
     case request_post(addr, token, path) do
@@ -327,6 +604,15 @@ defmodule ProxEx.Api do
     end
   end
 
+  @doc """
+
+  Stop a VM
+  ## Example
+
+      iex> vm_stop({"https://127.0.0.1:8006", "*secret token*"}, "node", 123)
+      {:ok, "UPID:nodename:001DE27E:083A591A:66E28BF4:qmstop:vmid:username@pve!token_name:"}
+  """
+  @spec vm_stop({String.t(), String.t()}, String.t(), integer()) :: {:ok, String.t()} | {:error, term()}
   def vm_stop({addr, token}, node, vmid) do
     path = "nodes/#{node}/qemu/#{vmid}/status/stop"
     case request_post(addr, token, path) do
@@ -367,6 +653,7 @@ defmodule ProxEx.Api do
         %{ ... }
       ]}
   """
+  @spec vm_fs_info({String.t(), String.t()}, String.t(), integer()) :: {:ok, [proxvm_fs_info()]} | {:error, term()}
   def vm_fs_info({addr, token}, node, vmid) do
     path = "nodes/#{node}/qemu/#{vmid}/agent/get-fsinfo"
     case request_get(addr, token, path) do
